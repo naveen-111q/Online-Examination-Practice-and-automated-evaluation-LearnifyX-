@@ -37,8 +37,8 @@ app.use('/api/chat', chatRoutes);
 app.use('/api/practice', practiceRoutes);
 app.use('/api/admin', adminRoutes);
 
-// // Serving Frontend Static Files (Production)
-// app.use(express.static(path.join(__dirname, '../client/dist')));
+// Serving Frontend Static Files
+app.use(express.static(path.join(__dirname, 'client/dist')));
 
 // Health check endpoint
 app.get('/api/health', async (req, res) => {
@@ -50,7 +50,7 @@ app.get('/api/health', async (req, res) => {
         res.status(500).json({ status: 'error', database: 'disconnected', error: err.message });
     }
 });
-app.get("/", (req, res) => {
+app.get("/api", (req, res) => {
     res.send("API is running...");
 });
 const PORT = process.env.PORT || 5000;
@@ -59,7 +59,7 @@ app.listen(PORT, '0.0.0.0', () => {
     console.log(`Server running on port ${PORT} (0.0.0.0)`);
 });
 
-// // Catch-all route to serve index.html for SPA (Production)
-// app.use((req, res) => {
-//     res.sendFile(path.join(__dirname, '../client/dist', 'index.html'));
-// });
+// Catch-all route to serve index.html for SPA
+app.use((req, res) => {
+    res.sendFile(path.join(__dirname, 'client/dist', 'index.html'));
+});

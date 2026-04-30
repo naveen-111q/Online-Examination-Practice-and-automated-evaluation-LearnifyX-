@@ -9,7 +9,7 @@ async function seedAdmin() {
         user: process.env.DB_USER || 'root',
         password: process.env.DB_PASSWORD || '',
         database: process.env.DB_NAME || 'exam_system',
-        ssl: process.env.DB_HOST && process.env.DB_HOST !== 'localhost' ? {
+        ssl: (process.env.DB_SSL === 'true' || (process.env.DB_HOST && !['localhost', '127.0.0.1'].includes(process.env.DB_HOST) && process.env.DB_HOST.includes('tidbcloud.com'))) ? {
             minVersion: 'TLSv1.2',
             rejectUnauthorized: true
         } : null
@@ -24,7 +24,7 @@ async function seedAdmin() {
         const adminEmail = 'srmap2026@gmail.com';
         const adminId = 'SRMAP2026';
         const adminPassword = 'naveen';
-        
+
         console.log(`Generating hash for password: '${adminPassword}'...`);
         const hashedPassword = await bcrypt.hash(adminPassword, 10);
         console.log("Generated hash:", hashedPassword);
