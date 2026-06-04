@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  db:
+    image: mysql:8.0
+    container_name: exam_system_db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: RootPassword123!
+      MYSQL_DATABASE: exam_system
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-pRootPassword123!"]
+      interval: 10s
+      timeout: 10s
+      retries: 5
+      start_period: 15s
+
+  app:
+    build: .
+    container_name: exam_system_app
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USER=root
+      - DB_PASSWORD=RootPassword123!
+      - DB_NAME=exam_system
+      - JWT_SECRET=super_secret_jwt_key_exam_system_2026
+      # Preloaded API keys and SMTP configs from local settings (can be overridden)
+      - OPENROUTER_API_KEY=your_openrouter_api_key_here
+      - EMAIL_USER=learnifyxteam@gmail.com
+      - EMAIL_PASS=rxefdbwrpqgyxjpw
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  mysql_data:
